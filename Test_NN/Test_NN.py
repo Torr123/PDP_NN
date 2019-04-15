@@ -79,7 +79,11 @@ def pwelch(Xarr, N=2048):
     S = np.hstack([S[:int(S.shape[0]/2):], S[int(S.shape[0]/2)::]])
     return F, S
 
-  
+import json
+with open("sixDEM_data_file.json", "w") as write_file:
+    json.dump(list([x_all.tolist(), y_all.tolist(), x_all_test.tolist(), y_all_test.tolist()]), write_file)
+
+
 np.random.seed(48)
 
 ###############################################################################################
