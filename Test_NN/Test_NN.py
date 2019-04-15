@@ -130,6 +130,6 @@ for i in range(0,len(y_p)):
 
 y_p_w = np.asarray(y_p_w)
 
-plt.plot(welch(y_p_w)[0],welch(y_p_w)[1])
-plt.plot(welch(x_test)[0],welch(x_test)[1], color = 'Red')
-plt.plot(welch(y_test)[0],welch(y_test)[1], color = 'Orange')
+#plt.plot(welch(y_p_w)[0],welch(y_p_w)[1])
+#plt.plot(welch(x_test)[0],welch(x_test)[1], color = 'Red')
+#plt.plot(welch(y_test)[0],welch(y_test)[1], color = 'Orange')
