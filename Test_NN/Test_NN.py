@@ -18,16 +18,14 @@ from keras.utils import plot_model
 ############################DATA################################
 
 data_dct = scipy.io.loadmat("../Data/Data2MSU.mat")
-X = data_dct['PDin'][0]
-Y = data_dct['PDout'][0]
-x_train = X[:(X.shape[0]*2)//3]
-y_train = Y[:(Y.shape[0]*2)//3]
-x_test = X[(X.shape[0]*2)//3:X.shape[0]]
-y_test = Y[(Y.shape[0]*2)//3:Y.shape[0]]
-x_train_real = x_train.real
-x_train_imag = x_train.imag
-y_train_real = y_train.real
-y_train_imag = y_train.imag
+#x_train = data_dct['PDin'][0][:(data_dct['PDin'][0].shape[0]*2)//3]
+#y_train = data_dct['PDout'][0][:(data_dct['PDout'][0].shape[0]*2)//3]
+#x_test = data_dct['PDin'][0][(data_dct['PDin'][0].shape[0]*2)//3:data_dct['PDin'][0].shape[0]]
+#y_test = data_dct['PDout'][0][(data_dct['PDout'][0].shape[0]*2)//3:data_dct['PDout'][0].shape[0]]
+#x_train_real = x_train.real
+#x_train_imag = x_train.imag
+#y_train_real = y_train.real
+#y_train_imag = y_train.imag
 #VAR
 FROM = 100
 TO = 60
@@ -40,9 +38,9 @@ FR_ML = 300
 FR_MZ = 800
 FR_LZ = 400
 #FUNC
-def arct(al, re, im, train):
+def arct(re, im):
     al = []
-    for i in range(0, len(train)):
+    for i in range(0, len(re)):
         al.append(np.hstack((FR_MZ if np.angle(complex(re[i],im[i])) > 0 else FR_LZ, 
                                 np.angle(complex(re[i],im[i]))*FR_ML, 
                                 abs(re[i]), 
@@ -52,28 +50,28 @@ def arct(al, re, im, train):
     return al
     
 x_all = []
-x_all = arct(x_all,x_train_real,x_train_imag,x_train)
+x_all = np.asarray(arct(data_dct['PDin'][0][:(data_dct['PDin'][0].shape[0]*2)//3].real,data_dct['PDin'][0][:(data_dct['PDin'][0].shape[0]*2)//3].imag))
 y_all = []
-y_all = arct(y_all,y_train_real,y_train_imag,y_train)
+y_all = np.asarray(arct(data_dct['PDout'][0][:(data_dct['PDout'][0].shape[0]*2)//3].real,data_dct['PDout'][0][:(data_dct['PDout'][0].shape[0]*2)//3].imag))
 
 ##########
-y_all = np.asarray(y_all)
-x_all = np.asarray(x_all)
+#y_all = np.asarray(y_all)
+#x_all = np.asarray(x_all)
 
 #TEST
 
-x_test_real = x_test.real
-x_test_imag = x_test.imag
+#x_test_real = x_test.real
+#x_test_imag = x_test.imag
 
-y_test_real = y_test.real
-y_test_imag = y_test.imag
+#y_test_real = y_test.real
+#y_test_imag = y_test.imag
 x_all_test = []
-x_all_test = arct(x_all_test,x_test_real,x_test_imag,x_test)
+x_all_test = np.asarray(arct(data_dct['PDin'][0][(data_dct['PDin'][0].shape[0]*2)//3:data_dct['PDin'][0].shape[0]].real,data_dct['PDin'][0][(data_dct['PDin'][0].shape[0]*2)//3:data_dct['PDin'][0].shape[0]].imag))
 y_all_test = []
-y_all_test = arct(y_all_test,y_test_real,y_test_imag,y_test)
+y_all_test = np.asarray(arct(data_dct['PDout'][0][(data_dct['PDout'][0].shape[0]*2)//3:data_dct['PDout'][0].shape[0]].real,data_dct['PDout'][0][(data_dct['PDout'][0].shape[0]*2)//3:data_dct['PDout'][0].shape[0]].imag))
     
-y_all_test = np.asarray(y_all_test)
-x_all_test = np.asarray(x_all_test)
+#y_all_test = np.asarray(y_all_test)
+#x_all_test = np.asarray(x_all_test)
 
 def pwelch(Xarr, N=2048):
     F, S = welch(Xarr.ravel().real + 1j*Xarr.ravel().imag, fs=2.0, window='hanning', nperseg=N, noverlap=None, nfft=None, detrend='constant', return_onesided=False, scaling='density', axis=-1)
@@ -116,7 +114,7 @@ plt.legend()
 plt.show()
 
 model.evaluate(x=x_all_test, y=y_all_test)
-
+"""
 y_p = model.predict(x=x_all_test)
 
 y_p_w = []
@@ -129,7 +127,7 @@ for i in range(0,len(y_p)):
   y_p_w.append(complex(y_p[i][0+2], y_p[i][2+2]))
 
 y_p_w = np.asarray(y_p_w)
-
+"""
 #plt.plot(welch(y_p_w)[0],welch(y_p_w)[1])
 #plt.plot(welch(x_test)[0],welch(x_test)[1], color = 'Red')
 #plt.plot(welch(y_test)[0],welch(y_test)[1], color = 'Orange')
