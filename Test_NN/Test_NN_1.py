@@ -1,3 +1,4 @@
+
 import numpy as np
 import theano
 import keras
@@ -33,7 +34,10 @@ model.add(Dense(6, activation='relu'))
 
 model.compile(optimizer='adam', loss = 'mean_squared_error',metrics=['accuracy'])
 
-model.fit(np.asarray(data[0]), np.asarray(data[1]), epochs=10, validation_split=0.2, callbacks=[early_stopping_callback])
+model.fit(np.asarray(data[0]), np.asarray(data[1]), epochs=10, validation_split=0.2)#, callbacks=[early_stopping_callback])
 
 model.evaluate(x=np.asarray(data[2]), y=np.asarray(data[3]))
+
+
+
 
